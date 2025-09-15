@@ -31,10 +31,27 @@ export default {
   },
   methods: {
     goBack() {
+      // Restore the submitted form data as draft data so user can continue editing
+      const submittedData = localStorage.getItem('cvFormData')
+      if (submittedData) {
+        try {
+          const formData = JSON.parse(submittedData)
+          // Convert back from the submission format to the form format
+          if (formData.fullName) {
+            formData.firstName = formData.fullName.firstName
+            formData.lastName = formData.fullName.lastName
+            delete formData.fullName
+          }
+          localStorage.setItem('cvFormDraft', JSON.stringify(formData))
+        } catch (e) {
+          console.error('Error restoring form data:', e)
+        }
+      }
       this.$router.push('/')
     },
     newCV() {
       localStorage.removeItem('cvFormData')
+      localStorage.removeItem('cvFormDraft')
       this.$router.push('/')
     }
   }
