@@ -3,13 +3,7 @@
     <div class="card">
       <div class="thank-you">
         <!-- Logo Section -->
-        <div class="logo">
-          <h1>Sivi Meka</h1>
-          <p>Professional CV Builder</p>
-        </div>
-
-        <!-- Success Icon -->
-        <div class="success-icon">✓</div>
+        <Logo />
 
         <!-- Thank You Message -->
         <h2>Thank You!</h2>
@@ -25,8 +19,13 @@
 </template>
 
 <script>
+import Logo from "@/components/Logo.vue"
+
 export default {
   name: 'ThankYou',
+  components: {
+    Logo
+  },
   methods: {
     goBack() {
       this.$router.push('/')
@@ -66,5 +65,9 @@ export default {
 .summary-item strong {
   color: #667eea;
   margin-right: 0.5rem;
+}
+
+.thank-you {
+  text-align: center;
 }
 </style>

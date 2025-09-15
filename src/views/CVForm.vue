@@ -2,10 +2,7 @@
   <div class="container">
     <div class="card">
       <!-- Logo Section -->
-      <div class="logo">
-        <h1>Sivi Meka</h1>
-        <p>Professional CV Builder</p>
-      </div>
+      <Logo />
 
       <!-- Progress Bar -->
       <div class="progress-container">
@@ -88,6 +85,7 @@ import EducationSection from '@/components/EducationSection.vue'
 import WorkExperienceSection from '@/components/WorkExperienceSection.vue'
 import CertificationsProjectsSection from '@/components/CertificationsProjectsSection.vue'
 import axios from 'axios'
+import Logo from '@/components/Logo.vue'
 
 export default {
   name: 'CVForm',
@@ -96,7 +94,8 @@ export default {
     JobInfoSection,
     EducationSection,
     WorkExperienceSection,
-    CertificationsProjectsSection
+    CertificationsProjectsSection,
+    Logo
   },
   data() {
     return {

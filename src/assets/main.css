@@ -153,30 +153,6 @@ textarea {
   transition: all 0.3s ease;
 }
 
-/* Thank you page styles */
-.thank-you {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-
-.thank-you h2 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.thank-you p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.success-icon {
-  font-size: 4rem;
-  color: #10b981;
-  margin-bottom: 2rem;
-}
-
 .remove-btn:hover {
   background: #ff3742;
   transform: translateY(-1px);
