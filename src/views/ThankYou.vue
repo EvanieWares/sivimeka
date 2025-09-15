@@ -14,20 +14,6 @@
         <!-- Thank You Message -->
         <h2>Thank You!</h2>
         <p>Your CV has been successfully submitted. We've received your information and will be in touch soon.</p>
-        
-        <!-- Summary of submitted data -->
-        <div v-if="submittedData" class="submission-summary">
-          <h3>Submission Summary:</h3>
-          <div class="summary-item">
-            <strong>Name:</strong> {{ submittedData.firstName }} {{ submittedData.lastName }}
-          </div>
-          <div class="summary-item">
-            <strong>Email:</strong> {{ submittedData.email }}
-          </div>
-          <div class="summary-item">
-            <strong>Job Title:</strong> {{ submittedData.jobTitle }}
-          </div>
-        </div>
 
         <!-- Back to Form Button -->
         <button @click="goBack" class="btn">
@@ -41,22 +27,8 @@
 <script>
 export default {
   name: 'ThankYou',
-  data() {
-    return {
-      submittedData: null
-    }
-  },
-  mounted() {
-    // Retrieve submitted data from localStorage
-    const data = localStorage.getItem('cvFormData')
-    if (data) {
-      this.submittedData = JSON.parse(data)
-    }
-  },
   methods: {
     goBack() {
-      // Clear stored data and go back to form
-      localStorage.removeItem('cvFormData')
       this.$router.push('/')
     }
   }
