@@ -15,23 +15,39 @@ A modern, expressive Vue.js web application for building professional CVs with s
 - **Step Navigation**: Navigate between form steps with visual progress indicator
 - **Dynamic Fields**: Add/remove multiple entries for education, work experience, certifications, and projects
 - **Form Validation**: Required field validation with user-friendly error messages
-- **Responsive Design**: Fully responsive layout optimized for desktop, tablet, and mobile devices
+- **Responsive Design**: Fully responsive layout optimized for desktop, tablet, and mobile devices with adaptive navigation and touch-friendly interface
 - **Two-Screen Flow**: Clean form submission flow with dedicated thank you page
 - **Data Persistence**: Form data is maintained during navigation between steps
 
 ## Screenshots
 
-### Desktop CV Form - Personal Information
-![CV Form Step 1](https://github.com/user-attachments/assets/c95c0c32-bd34-4ccd-a405-9ebda9138439)
+### Desktop Experience
 
-### Desktop CV Form - Certifications & Projects
-![CV Form Final Step](https://github.com/user-attachments/assets/d0c3de1a-6e57-4e77-87f1-1afac62eeaf9)
+#### CV Form - Personal Information (Step 1)
+![CV Form Step 1 - Desktop](screenshots/desktop-cv-form-step1.png)
 
-### Thank You Page
-![Thank You Page](https://github.com/user-attachments/assets/1032de30-ef2a-4e16-b00d-046a20de59e5)
+#### CV Form - Certifications & Projects (Step 5)
+![CV Form Final Step - Desktop](screenshots/desktop-cv-form-final-step.png)
+
+#### Thank You Page - Desktop
+![Thank You Page - Desktop](screenshots/desktop-thank-you-page.png)
 
 ### Mobile Responsive Design
-![Mobile View](https://github.com/user-attachments/assets/afd50757-3b05-4f2c-8a0e-768a02458f8b)
+
+The application features a fully responsive design optimized for mobile devices with:
+- **Adaptive Layout**: Form sections and navigation adapt seamlessly to smaller screens
+- **Touch-Friendly Interface**: All buttons and form elements are optimized for touch interaction
+- **Optimized Typography**: Text scaling and spacing adjust for mobile readability
+- **Preserved Functionality**: All features work seamlessly across devices
+
+#### CV Form - Mobile View (Step 1)
+![CV Form Step 1 - Mobile](screenshots/mobile-cv-form-responsive.png)
+
+#### CV Form - Mobile View (Step 2)
+![CV Form Step 2 - Mobile](screenshots/mobile-cv-form-step2.png)
+
+#### Thank You Page - Mobile
+![Thank You Page - Mobile](screenshots/mobile-thank-you-page.png)
 
 ## Technology Stack
 
