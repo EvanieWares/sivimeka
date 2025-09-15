@@ -309,10 +309,6 @@ export default {
         // Store form data locally as backup
         localStorage.setItem('cvFormData', JSON.stringify(this.formData))
 
-        // Clear all local data after successful submission
-        //localStorage.removeItem('cvFormDraft')
-        //localStorage.removeItem('cvFormData')
-
         // Reset form data
         this.resetFormData()
 
@@ -332,53 +328,6 @@ export default {
           submitButton.disabled = false
           submitButton.textContent = 'Submit CV'
         }
-      }
-    },
-
-    // Parse arrays to formatted strings
-    parseArraysToStrings(data) {
-      // Parse education array
-      if (data.education && Array.isArray(data.education)) {
-        const educationEntries = data.education
-          .filter(edu => edu.degree.trim() || edu.institution.trim() || edu.year.trim())
-          .map((edu, index) => {
-            const entry = `${edu.degree} at ${edu.institution}, ${edu.year}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
-            return data.education.length > 1 ? `${index + 1}. ${entry}` : entry
-          })
-        data.education = educationEntries.join('\n')
-      }
-
-      // Parse work experience array
-      if (data.workExperience && Array.isArray(data.workExperience)) {
-        const workEntries = data.workExperience
-          .filter(work => work.title.trim() || work.company.trim() || work.duration.trim())
-          .map((work, index) => {
-            const entry = `${work.title} at ${work.company}, ${work.duration}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
-            return data.workExperience.length > 1 ? `${index + 1}. ${entry}` : entry
-          })
-        data.workExperience = workEntries.join('\n')
-      }
-
-      // Parse certifications array
-      if (data.certifications && Array.isArray(data.certifications)) {
-        const certEntries = data.certifications
-          .filter(cert => cert.name.trim() || cert.organization.trim() || cert.date.trim())
-          .map((cert, index) => {
-            const entry = `${cert.name} from ${cert.organization}, ${cert.date}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
-            return data.certifications.length > 1 ? `${index + 1}. ${entry}` : entry
-          })
-        data.certifications = certEntries.join('\n')
-      }
-
-      // Parse key projects array
-      if (data.keyProjects && Array.isArray(data.keyProjects)) {
-        const projectEntries = data.keyProjects
-          .filter(project => project.name.trim() || project.technologies.trim())
-          .map((project, index) => {
-            const entry = `${project.name}, ${project.technologies}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
-            return data.keyProjects.length > 1 ? `${index + 1}. ${entry}` : entry
-          })
-        data.keyProjects = projectEntries.join('\n')
       }
     },
 
