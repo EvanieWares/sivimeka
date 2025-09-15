@@ -407,4 +407,15 @@ textarea {
     width: 100%;
     margin-top: 0.5rem;
   }
+
+  .section-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  .nav-btn {
+    padding: 1rem;
+    min-width: 100px;
+  }
 }
