@@ -11,7 +11,10 @@
 
         <!-- Back to Form Button -->
         <button @click="goBack" class="btn">
-          Create Another CV
+          Create Another CV (Keep Data)
+        </button>
+        <button @click="newCV" class="btn">
+          Create Another CV (Clear Data)
         </button>
       </div>
     </div>
@@ -28,6 +31,10 @@ export default {
   },
   methods: {
     goBack() {
+      this.$router.push('/')
+    },
+    newCV() {
+      localStorage.removeItem('cvFormData')
       this.$router.push('/')
     }
   }
