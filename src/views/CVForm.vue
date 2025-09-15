@@ -7,277 +7,110 @@
         <p>Professional CV Builder</p>
       </div>
 
-      <!-- CV Form -->
-      <form @submit.prevent="submitForm">
-        <!-- Personal Information -->
-        <div class="section-header">Personal Information</div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="firstName">First Name *</label>
-            <input
-              type="text"
-              id="firstName"
-              v-model="formData.firstName"
-              required
-              placeholder="Enter your first name"
-            />
-          </div>
-          <div class="form-group">
-            <label for="lastName">Last Name *</label>
-            <input
-              type="text"
-              id="lastName"
-              v-model="formData.lastName"
-              required
-              placeholder="Enter your last name"
-            />
-          </div>
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            :style="{ width: `${(currentStep / totalSteps) * 100}%` }"
+          ></div>
         </div>
+        <div class="progress-text">
+          Step {{ currentStep }} of {{ totalSteps }}
+        </div>
+      </div>
 
-        <div class="form-group">
-          <label for="email">Email Address *</label>
-          <input
-            type="email"
-            id="email"
-            v-model="formData.email"
-            required
-            placeholder="Enter your email address"
-          />
-        </div>
-
-        <!-- Job Information -->
-        <div class="section-header">Job Information</div>
-        
-        <div class="form-group">
-          <label for="jobTitle">Job Title *</label>
-          <input
-            type="text"
-            id="jobTitle"
-            v-model="formData.jobTitle"
-            required
-            placeholder="e.g., Senior Software Engineer"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="jobDescription">Job Description</label>
-          <textarea
-            id="jobDescription"
-            v-model="formData.jobDescription"
-            placeholder="Describe the position you're applying for..."
-          ></textarea>
-        </div>
-
-        <!-- Professional Summary -->
-        <div class="section-header">Professional Summary</div>
-        
-        <div class="form-group">
-          <label for="summary">Summary *</label>
-          <textarea
-            id="summary"
-            v-model="formData.summary"
-            required
-            placeholder="Write a brief summary of your professional background..."
-          ></textarea>
-        </div>
-
-        <!-- Skills -->
-        <div class="section-header">Skills</div>
-        
-        <div class="form-group">
-          <label for="skills">Skills (comma-separated)</label>
-          <textarea
-            id="skills"
-            v-model="formData.skills"
-            placeholder="e.g., JavaScript, Vue.js, Python, Project Management..."
-          ></textarea>
-        </div>
-
-        <!-- Education -->
-        <div class="section-header">Education</div>
-        
-        <div v-for="(education, index) in formData.education" :key="index" class="dynamic-field">
-          <button type="button" @click="removeEducation(index)" class="remove-btn" v-if="formData.education.length > 1">
-            Remove
-          </button>
-          
-          <div class="form-group">
-            <label>Degree/Qualification</label>
-            <input
-              type="text"
-              v-model="education.degree"
-              placeholder="e.g., Bachelor of Computer Science"
-            />
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Institution</label>
-              <input
-                type="text"
-                v-model="education.institution"
-                placeholder="University/School name"
-              />
-            </div>
-            <div class="form-group">
-              <label>Year</label>
-              <input
-                type="text"
-                v-model="education.year"
-                placeholder="e.g., 2020-2024"
-              />
-            </div>
-          </div>
-        </div>
-        
-        <button type="button" @click="addEducation" class="add-btn">
-          + Add Education
+      <!-- Section Navigation -->
+      <div class="section-nav">
+        <button
+          v-for="(section, index) in sections"
+          :key="index"
+          type="button"
+          @click="goToSection(index)"
+          :class="['nav-btn', { active: currentStep === index + 1, completed: completedSections.includes(index) }]"
+          :disabled="!canNavigateToSection(index)"
+        >
+          <span class="step-number">{{ index + 1 }}</span>
+          <span class="step-title">{{ section.title }}</span>
         </button>
+      </div>
 
-        <!-- Work Experience -->
-        <div class="section-header">Work Experience</div>
-        
-        <div v-for="(experience, index) in formData.workExperience" :key="index" class="dynamic-field">
-          <button type="button" @click="removeExperience(index)" class="remove-btn" v-if="formData.workExperience.length > 1">
-            Remove
-          </button>
-          
-          <div class="form-group">
-            <label>Job Title</label>
-            <input
-              type="text"
-              v-model="experience.title"
-              placeholder="e.g., Software Developer"
-            />
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Company</label>
-              <input
-                type="text"
-                v-model="experience.company"
-                placeholder="Company name"
-              />
-            </div>
-            <div class="form-group">
-              <label>Duration</label>
-              <input
-                type="text"
-                v-model="experience.duration"
-                placeholder="e.g., Jan 2020 - Present"
-              />
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label>Description</label>
-            <textarea
-              v-model="experience.description"
-              placeholder="Describe your responsibilities and achievements..."
-            ></textarea>
-          </div>
-        </div>
-        
-        <button type="button" @click="addExperience" class="add-btn">
-          + Add Work Experience
-        </button>
+      <!-- Dynamic Section Components -->
+      <PersonalInfoSection
+        v-if="currentStep === 1"
+        :formData="formData"
+        :errors="errors"
+        @update:formData="updateFormData"
+        @next="validateAndNext(1)"
+      />
 
-        <!-- Certifications -->
-        <div class="section-header">Certifications</div>
-        
-        <div v-for="(certification, index) in formData.certifications" :key="index" class="dynamic-field">
-          <button type="button" @click="removeCertification(index)" class="remove-btn" v-if="formData.certifications.length > 1">
-            Remove
-          </button>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Certification Name</label>
-              <input
-                type="text"
-                v-model="certification.name"
-                placeholder="e.g., AWS Certified Solutions Architect"
-              />
-            </div>
-            <div class="form-group">
-              <label>Issuing Organization</label>
-              <input
-                type="text"
-                v-model="certification.organization"
-                placeholder="e.g., Amazon Web Services"
-              />
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label>Date Obtained</label>
-            <input
-              type="text"
-              v-model="certification.date"
-              placeholder="e.g., March 2023"
-            />
-          </div>
-        </div>
-        
-        <button type="button" @click="addCertification" class="add-btn">
-          + Add Certification
-        </button>
+      <JobInfoSection
+        v-if="currentStep === 2"
+        :formData="formData"
+        :errors="errors"
+        @update:formData="updateFormData"
+        @next="validateAndNext(2)"
+        @previous="previousStep"
+      />
 
-        <!-- Key Projects -->
-        <div class="section-header">Key Projects</div>
-        
-        <div v-for="(project, index) in formData.keyProjects" :key="index" class="dynamic-field">
-          <button type="button" @click="removeProject(index)" class="remove-btn" v-if="formData.keyProjects.length > 1">
-            Remove
-          </button>
-          
-          <div class="form-group">
-            <label>Project Name</label>
-            <input
-              type="text"
-              v-model="project.name"
-              placeholder="e.g., E-commerce Platform"
-            />
-          </div>
-          
-          <div class="form-group">
-            <label>Technologies Used</label>
-            <input
-              type="text"
-              v-model="project.technologies"
-              placeholder="e.g., Vue.js, Node.js, MongoDB"
-            />
-          </div>
-          
-          <div class="form-group">
-            <label>Description</label>
-            <textarea
-              v-model="project.description"
-              placeholder="Describe the project, your role, and key achievements..."
-            ></textarea>
-          </div>
-        </div>
-        
-        <button type="button" @click="addProject" class="add-btn">
-          + Add Project
-        </button>
+      <EducationSection
+        v-if="currentStep === 3"
+        :formData="formData"
+        @update:formData="updateFormData"
+        @next="validateAndNext(3)"
+        @previous="previousStep"
+      />
 
-        <!-- Submit Button -->
-        <button type="submit" class="btn">
-          Submit CV
-        </button>
-      </form>
+      <WorkExperienceSection
+        v-if="currentStep === 4"
+        :formData="formData"
+        @update:formData="updateFormData"
+        @next="validateAndNext(4)"
+        @previous="previousStep"
+      />
+
+      <CertificationsProjectsSection
+        v-if="currentStep === 5"
+        :formData="formData"
+        @update:formData="updateFormData"
+        @submit="validateAndNext(5)"
+        @previous="previousStep"
+      />
+
     </div>
   </div>
 </template>
 
 <script>
+import PersonalInfoSection from '@/components/PersonalInfoSection.vue'
+import JobInfoSection from '@/components/JobInfoSection.vue'
+import EducationSection from '@/components/EducationSection.vue'
+import WorkExperienceSection from '@/components/WorkExperienceSection.vue'
+import CertificationsProjectsSection from '@/components/CertificationsProjectsSection.vue'
+import axios from 'axios'
+
 export default {
   name: 'CVForm',
+  components: {
+    PersonalInfoSection,
+    JobInfoSection,
+    EducationSection,
+    WorkExperienceSection,
+    CertificationsProjectsSection
+  },
   data() {
     return {
+      currentStep: 1,
+      totalSteps: 5,
+      completedSections: [],
+      errors: {},
+      sections: [
+        { title: 'Personal Info', key: 'personal' },
+        { title: 'Job & Summary', key: 'job' },
+        { title: 'Education', key: 'education' },
+        { title: 'Experience', key: 'experience' },
+        { title: 'Certs & Projects', key: 'final' }
+      ],
       formData: {
         firstName: '',
         lastName: '',
@@ -317,78 +150,301 @@ export default {
         ]
       }
     }
-  },
-  methods: {
-    // Education methods
-    addEducation() {
-      this.formData.education.push({
-        degree: '',
-        institution: '',
-        year: ''
-      })
-    },
-    removeEducation(index) {
-      if (this.formData.education.length > 1) {
-        this.formData.education.splice(index, 1)
+  },  methods: {
+    // Navigation methods
+    nextStep() {
+      if (this.currentStep < this.totalSteps) {
+        this.currentStep++
       }
     },
-    
-    // Work experience methods
-    addExperience() {
-      this.formData.workExperience.push({
-        title: '',
-        company: '',
-        duration: '',
-        description: ''
-      })
-    },
-    removeExperience(index) {
-      if (this.formData.workExperience.length > 1) {
-        this.formData.workExperience.splice(index, 1)
+    previousStep() {
+      if (this.currentStep > 1) {
+        this.currentStep--
       }
     },
-    
-    // Certification methods
-    addCertification() {
-      this.formData.certifications.push({
-        name: '',
-        organization: '',
-        date: ''
-      })
-    },
-    removeCertification(index) {
-      if (this.formData.certifications.length > 1) {
-        this.formData.certifications.splice(index, 1)
+    goToSection(index) {
+      if (this.canNavigateToSection(index)) {
+        this.currentStep = index + 1
       }
     },
-    
-    // Project methods
-    addProject() {
-      this.formData.keyProjects.push({
-        name: '',
-        technologies: '',
-        description: ''
-      })
+    canNavigateToSection(index) {
+      const targetStep = index + 1
+
+      // Always allow navigation to current step
+      if (targetStep === this.currentStep) {
+        return true
+      }
+
+      // Allow navigation to previous completed steps
+      if (targetStep < this.currentStep && this.completedSections.includes(index)) {
+        return true
+      }
+
+      // For navigation to future steps, check if all previous steps are completed
+      if (targetStep > this.currentStep) {
+        // Check if all previous sections (0 to index-1) are completed
+        for (let i = 0; i < index; i++) {
+          if (!this.completedSections.includes(i)) {
+            return false
+          }
+        }
+        return true
+      }
+
+      return false
     },
-    removeProject(index) {
-      if (this.formData.keyProjects.length > 1) {
-        this.formData.keyProjects.splice(index, 1)
+
+    // Form data update method
+    updateFormData(newData) {
+      this.formData = { ...this.formData, ...newData }
+    },
+
+    // Validation methods
+    validateSection(step) {
+      this.errors = {}
+      let isValid = true
+
+      switch (step) {
+        case 1:
+          if (!this.formData.firstName.trim()) {
+            this.errors.firstName = 'First name is required'
+            isValid = false
+          }
+          if (!this.formData.lastName.trim()) {
+            this.errors.lastName = 'Last name is required'
+            isValid = false
+          }
+          if (!this.formData.email.trim()) {
+            this.errors.email = 'Email is required'
+            isValid = false
+          } else if (!this.isValidEmail(this.formData.email)) {
+            this.errors.email = 'Please enter a valid email address'
+            isValid = false
+          }
+          break
+
+        case 2:
+          if (!this.formData.jobTitle.trim()) {
+            this.errors.jobTitle = 'Job title is required'
+            isValid = false
+          }
+          break
+
+        case 3:
+        case 4:
+        case 5:
+          // These sections are optional but we can add validation if needed
+          break
+      }
+
+      return isValid
+    },
+
+    validateAndNext(step) {
+      if (this.validateSection(step)) {
+        // Mark section as completed
+        if (!this.completedSections.includes(step - 1)) {
+          this.completedSections.push(step - 1)
+        }
+
+        if (step === this.totalSteps) {
+          this.submitForm()
+        } else {
+          this.nextStep()
+        }
       }
     },
-    
+
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailRegex.test(email)
+    },
+
     // Form submission
-    submitForm() {
-      // Basic validation
-      if (!this.formData.firstName || !this.formData.lastName || !this.formData.email || !this.formData.jobTitle || !this.formData.summary) {
-        alert('Please fill in all required fields marked with *')
+    async submitForm() {
+      // Final validation
+      let allValid = true
+      for (let i = 1; i <= this.totalSteps; i++) {
+        if (!this.validateSection(i)) {
+          allValid = false
+          this.currentStep = i
+          break
+        }
+      }
+
+      if (!allValid) {
+        alert('Please complete all required fields')
         return
       }
-      
-      // Store form data (in a real app, this would be sent to a server)
-      localStorage.setItem('cvFormData', JSON.stringify(this.formData))
-      
-      // Navigate to thank you page
-      this.$router.push('/thank-you')
+
+      try {
+        const submitButton = document.querySelector('.submit-btn')
+        if (submitButton) {
+          submitButton.disabled = true
+          submitButton.textContent = 'Submitting...'
+        }
+
+        // Restructure data to combine firstName and lastName into fullname
+        const submissionData = { ...this.formData }
+
+        // Create fullName object and remove individual firstName/lastName
+        submissionData.fullName = {
+          firstName: this.formData.firstName,
+          lastName: this.formData.lastName
+        }
+        delete submissionData.firstName
+        delete submissionData.lastName
+
+        // Send form data
+        await axios.post(
+          import.meta.env.VITE_API_URL,
+          submissionData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              [import.meta.env.VITE_API_KEY_NAME]: import.meta.env.VITE_API_KEY
+            }
+          }
+        )
+
+        // Store form data locally as backup
+        localStorage.setItem('cvFormData', JSON.stringify(this.formData))
+
+        // Clear all local data after successful submission
+        //localStorage.removeItem('cvFormDraft')
+        //localStorage.removeItem('cvFormData')
+
+        // Reset form data
+        this.resetFormData()
+
+        // Reset completed sections and current step
+        this.completedSections = []
+        this.currentStep = 1
+
+        // Navigate to thank you page
+        this.$router.push('/thank-you')
+      } catch (error) {
+        console.error('Error submitting form:', error)
+        alert('There was an error submitting your form. Please try again.')
+
+        // Reset button state
+        const submitButton = document.querySelector('.submit-btn')
+        if (submitButton) {
+          submitButton.disabled = false
+          submitButton.textContent = 'Submit CV'
+        }
+      }
+    },
+
+    // Parse arrays to formatted strings
+    parseArraysToStrings(data) {
+      // Parse education array
+      if (data.education && Array.isArray(data.education)) {
+        const educationEntries = data.education
+          .filter(edu => edu.degree.trim() || edu.institution.trim() || edu.year.trim())
+          .map((edu, index) => {
+            const entry = `${edu.degree} at ${edu.institution}, ${edu.year}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
+            return data.education.length > 1 ? `${index + 1}. ${entry}` : entry
+          })
+        data.education = educationEntries.join('\n')
+      }
+
+      // Parse work experience array
+      if (data.workExperience && Array.isArray(data.workExperience)) {
+        const workEntries = data.workExperience
+          .filter(work => work.title.trim() || work.company.trim() || work.duration.trim())
+          .map((work, index) => {
+            const entry = `${work.title} at ${work.company}, ${work.duration}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
+            return data.workExperience.length > 1 ? `${index + 1}. ${entry}` : entry
+          })
+        data.workExperience = workEntries.join('\n')
+      }
+
+      // Parse certifications array
+      if (data.certifications && Array.isArray(data.certifications)) {
+        const certEntries = data.certifications
+          .filter(cert => cert.name.trim() || cert.organization.trim() || cert.date.trim())
+          .map((cert, index) => {
+            const entry = `${cert.name} from ${cert.organization}, ${cert.date}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
+            return data.certifications.length > 1 ? `${index + 1}. ${entry}` : entry
+          })
+        data.certifications = certEntries.join('\n')
+      }
+
+      // Parse key projects array
+      if (data.keyProjects && Array.isArray(data.keyProjects)) {
+        const projectEntries = data.keyProjects
+          .filter(project => project.name.trim() || project.technologies.trim())
+          .map((project, index) => {
+            const entry = `${project.name}, ${project.technologies}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
+            return data.keyProjects.length > 1 ? `${index + 1}. ${entry}` : entry
+          })
+        data.keyProjects = projectEntries.join('\n')
+      }
+    },
+
+    // Reset form data to initial state
+    resetFormData() {
+      this.formData = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        jobTitle: '',
+        jobDescription: '',
+        summary: '',
+        skills: '',
+        education: [
+          {
+            degree: '',
+            institution: '',
+            year: ''
+          }
+        ],
+        workExperience: [
+          {
+            title: '',
+            company: '',
+            duration: '',
+            description: ''
+          }
+        ],
+        certifications: [
+          {
+            name: '',
+            organization: '',
+            date: ''
+          }
+        ],
+        keyProjects: [
+          {
+            name: '',
+            technologies: '',
+            description: ''
+          }
+        ]
+      }
+    }
+  },
+
+  // Auto-save functionality
+  watch: {
+    formData: {
+      handler(newData) {
+        localStorage.setItem('cvFormDraft', JSON.stringify(newData))
+      },
+      deep: true
+    }
+  },
+
+  // Load draft data on component mount
+  mounted() {
+    const draftData = localStorage.getItem('cvFormDraft')
+    if (draftData) {
+      try {
+        this.formData = { ...this.formData, ...JSON.parse(draftData) }
+      } catch (e) {
+        console.error('Error loading draft data:', e)
+      }
     }
   }
 }
